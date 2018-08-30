@@ -10,37 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_06_09_105530) do
+ActiveRecord::Schema.define(version: 2018_08_29_210547) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "games", force: :cascade do |t|
-    t.datetime "match_date"
     t.bigint "group_id"
+    t.bigint "user_id"
+    t.datetime "game_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["group_id"], name: "index_games_on_group_id"
-  end
-
-  create_table "games_users", id: false, force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "game_id", null: false
-    t.index ["game_id", "user_id"], name: "index_games_users_on_game_id_and_user_id"
-    t.index ["user_id", "game_id"], name: "index_games_users_on_user_id_and_game_id"
+    t.index ["user_id"], name: "index_games_on_user_id"
   end
 
   create_table "groups", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "groups_users", id: false, force: :cascade do |t|
-    t.bigint "group_id", null: false
-    t.bigint "user_id", null: false
-    t.index ["group_id", "user_id"], name: "index_groups_users_on_group_id_and_user_id"
-    t.index ["user_id", "group_id"], name: "index_groups_users_on_user_id_and_group_id"
   end
 
   create_table "users", force: :cascade do |t|

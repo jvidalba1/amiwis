@@ -1,5 +1,30 @@
-<h2><%= @user.name || "Unknown" %> - <%= @user.email %></h2>
+<h2><%= @user.name || "Unknown" %> - <%= @user.email %></h2> <%= link_to("Editar perfil", edit_user_path(@user)) %>
 
-<h4>Grupos: </h4>
+<h4>Grupos inscrito (<%= @user.groups.count %>)</h4>
+<ul>
+<% @user.groups.each do |group| %>
+  <li>
+    <%= link_to("#{group.name}", group_path(group)) %>
+    <% if group.admin == @user %>
+      Eres admin
+    <% end %>
+  </li>
+<% end %>
+</ul>
 
+<h4>Solicitudes de grupos</h4>
+<ul>
+<% @user.requests.each do |request| %>
+  <li>
+    <strong>Grupo</strong> <%= link_to("#{request.group.name}", group_path(request.group)) %>
+    <strong>Estado</strong> <%= request.status %>
+
+    <% if request.pending? %>
+      <strong>At</strong> <%= request.request_date %>
+    <% else %>
+      <strong>At</strong> <%= request.reply_at %>
+    <% end %>
+  </li>
+<% end %>
+</ul>
 

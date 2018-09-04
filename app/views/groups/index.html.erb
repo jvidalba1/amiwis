@@ -1,12 +1,10 @@
-<p id="notice"><%= notice %></p>
-
-<h1>Groups</h1>
+<h1>Grupos</h1>
 <div class="table-responsive">
   <table class="table">
     <thead>
       <tr>
-        <th>Name</th>
-        <th colspan="1"></th>
+        <th>Nombre del grupo</th>
+        <th colspan="3"></th>
       </tr>
     </thead>
 
@@ -14,9 +12,29 @@
       <% @groups.each do |group| %>
         <tr>
           <td><%= group.name %></td>
-          <td><%= link_to 'Solicitar ingreso', "#" %></td>
-          <td><%= link_to 'Show', group %></td>
-          <td><%= link_to 'Edit', edit_group_path(group) %></td>
+          <td>
+            <% if(group.admin == current_user) %>
+              <p>Eres admin</p>
+            <% elsif(current_user.member?(group)) %>
+              <p>Eres miembro</p>
+            <% elsif(group.group_requests(current_user).any?) %>
+              <p>Solicitud enviada</p>
+            <% else %>
+              <%= link_to('Solicitar ingreso',
+                group_user_requests_path(
+                  group_id: group.id,
+                  user_id: current_user.id
+                ),
+                method: :post
+              )%>
+            <% end %>
+          </td>
+          <td><%= link_to 'Ver', group %></td>
+          <td>
+            <% if(group.admin == current_user) %>
+              <%= link_to 'Editar', edit_group_path(group) %>
+            <% end %>
+          </td>
         </tr>
       <% end %>
     </tbody>

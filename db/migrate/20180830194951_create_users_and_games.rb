@@ -6,7 +6,7 @@ class CreateUsersAndGames < ActiveRecord::Migration[5.2]
       t.timestamps
     end
 
-    create_table :users_games, id: false do |t|
+    create_table :games_users, id: false do |t|
       t.belongs_to :user, index: true
       t.belongs_to :game, index: true
     end

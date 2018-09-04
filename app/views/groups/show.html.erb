@@ -1,0 +1,85 @@
+<p>
+  <strong>Nombre del grupo:</strong>
+  <%= @group.name %>
+</p>
+
+<p>
+  <strong>Administrador</strong>
+  <%= @group.admin.name %>
+</p>
+
+<% if can? :update, @group %>
+  <%= link_to 'Edit', edit_group_path(@group) %> |
+<% end %>
+<%= link_to 'Back', groups_path %>
+
+<%# raise "dsadf" %>
+<% if @group.admin == current_user %>
+  <h3>Solicitudes pendientes</h3>
+  <% unless @pending_requets.empty? %>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Nombre de usuario</th>
+          <th colspan="2"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @pending_requets.each do |request| %>
+          <tr>
+            <td><%= request.user.name %></td>
+            <td><%= link_to 'Aceptar', accept_request_path(request), method: :post %></td>
+            <td><%= link_to 'Rechazar', deny_request_path(request), method: :post %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <h5>No hay solicitudes.</h5>
+  <% end %>
+
+  </br>
+
+  <h3>Solicitudes con respuesta</h3>
+  <% unless @replied_requests.empty? %>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Nombre de usuario</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @replied_requests.each do |request| %>
+          <tr>
+            <td><%= request.user.name %></td>
+            <td><%= request.status %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <h5>No hay solicitudes.</h5>
+  <% end %>
+
+  </br>
+<% end %>
+
+<h3>Miembros</h3>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Nombre de usuario</th>
+        <th>Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @group.users.each do |user| %>
+        <tr>
+          <td><%= user.name %></td>
+          <td><%= user.email %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+

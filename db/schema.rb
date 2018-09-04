@@ -10,19 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_29_210547) do
+ActiveRecord::Schema.define(version: 2018_08_30_195240) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "games", force: :cascade do |t|
-    t.bigint "group_id"
-    t.bigint "user_id"
     t.datetime "game_date"
+    t.bigint "group_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["group_id"], name: "index_games_on_group_id"
-    t.index ["user_id"], name: "index_games_on_user_id"
   end
 
   create_table "groups", force: :cascade do |t|
@@ -47,6 +45,20 @@ ActiveRecord::Schema.define(version: 2018_08_29_210547) do
     t.inet "last_sign_in_ip"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
+  create_table "users_games", id: false, force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "game_id"
+    t.index ["game_id"], name: "index_users_games_on_game_id"
+    t.index ["user_id"], name: "index_users_games_on_user_id"
+  end
+
+  create_table "users_groups", id: false, force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "group_id"
+    t.index ["group_id"], name: "index_users_groups_on_group_id"
+    t.index ["user_id"], name: "index_users_groups_on_user_id"
   end
 
 end

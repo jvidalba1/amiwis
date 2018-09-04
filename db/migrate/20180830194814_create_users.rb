@@ -1,19 +1,5 @@
-class CreateGames < ActiveRecord::Migration[5.2]
+class CreateUsers < ActiveRecord::Migration[5.2]
   def change
-    create_table :groups do |t|
-      t.string :name
-
-      t.timestamps
-    end
-
-    create_table :games do |t|
-      t.belongs_to :group, index: true
-      t.belongs_to :user, index: true
-      t.datetime :game_date
-
-      t.timestamps
-    end
-
     create_table :users do |t|
       t.string :name
       t.timestamps

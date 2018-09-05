@@ -11,5 +11,5 @@ class Request < ApplicationRecord
   scope :pending, -> (group_id) { where(status: :pending, group_id: group_id) }
   scope :accepted, -> (group_id) { where(status: :pending, group_id: group_id) }
   scope :denied, -> (group_id) { where(status: :pending, group_id: group_id) }
-  scope :replied, -> (group_id) { where(status: [:accepted, :denied]) }
+  scope :replied, -> (group_id) { where(status: [:accepted, :denied], group_id: group_id) }
 end

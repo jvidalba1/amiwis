@@ -66,20 +66,64 @@
 <% end %>
 
 <h3>Miembros</h3>
-  <table class="table">
+<table class="table">
+  <thead>
+    <tr>
+      <th>Nombre de usuario</th>
+      <th>Email</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @group.users.each do |user| %>
+      <tr>
+        <td><%= user.name %></td>
+        <td><%= user.email %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<% if current_user.member?(@group) %>
+  <h3>Partidos</h3>
+  <% if @group.admin == current_user %>
+    <%= link_to "Nuevo partido", new_group_game_path(group_id: @group.id) %>
+  <% end %>
+  <table class="table table-striped">
     <thead>
       <tr>
-        <th>Nombre de usuario</th>
-        <th>Email</th>
+        <th>Fecha</th>
+        <th colspan="2"></th>
       </tr>
     </thead>
     <tbody>
-      <% @group.users.each do |user| %>
+      <% @games.each do |game| %>
         <tr>
-          <td><%= user.name %></td>
-          <td><%= user.email %></td>
+          <td><%= game.game_date %></td>
+          <td><%= link_to "Ver", group_game_path(group_id: @group.id, id: game.id) %></td>
+          <td>
+            <% unless current_user.enrolled(game) %>
+              <%= link_to('Anotarme',
+                game_user_inscriptions_path(
+                  game_id: game.id,
+                  user_id: current_user.id
+                ),
+                method: :post
+              )%>
+            <% else %>
+              <p>
+                <% if current_user.enrolled(game).bench? %>
+                  En espera |
+                <% else %>
+                  Inscrito |
+                <% end %>
+                <%= link_to('Salir', inactive_inscription_path(current_user.enrolled(game)), method: :post)%>
+              </p>
+            <% end %>
+
+          </td>
         </tr>
       <% end %>
     </tbody>
   </table>
 
+<% end %>

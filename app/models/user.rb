@@ -5,6 +5,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable
 
   has_many :requests
+  has_many :inscriptions
 
   has_and_belongs_to_many :games
   has_and_belongs_to_many :groups
@@ -12,5 +13,13 @@ class User < ApplicationRecord
   def member?(group)
     self.groups.include?(group)
   end
+
+  def enrolled(game)
+    self.inscriptions.find_by(game_id: game.id, status: [:active, :bench])
+  end
+
+  # def inscription(game)
+  #   self.inscriptions.find_by(game_id: game.id)
+  # end
 
 end

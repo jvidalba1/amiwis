@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_04_213742) do
+ActiveRecord::Schema.define(version: 2018_09_05_052018) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,6 +20,10 @@ ActiveRecord::Schema.define(version: 2018_09_04_213742) do
     t.bigint "group_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "status"
+    t.integer "limit_users"
+    t.integer "current_users"
+    t.string "place"
     t.index ["group_id"], name: "index_games_on_group_id"
   end
 
@@ -42,6 +46,18 @@ ActiveRecord::Schema.define(version: 2018_09_04_213742) do
     t.bigint "group_id"
     t.index ["group_id"], name: "index_groups_users_on_group_id"
     t.index ["user_id"], name: "index_groups_users_on_user_id"
+  end
+
+  create_table "inscriptions", force: :cascade do |t|
+    t.bigint "game_id"
+    t.bigint "user_id"
+    t.datetime "incription_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "status"
+    t.datetime "inactive_at"
+    t.index ["game_id"], name: "index_inscriptions_on_game_id"
+    t.index ["user_id"], name: "index_inscriptions_on_user_id"
   end
 
   create_table "requests", force: :cascade do |t|

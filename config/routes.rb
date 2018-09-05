@@ -7,8 +7,8 @@ Rails.application.routes.draw do
 
   get 'pages/landing'
 
-
   resources :groups do
+    resources :games
     resources :users do
       resources :requests, shallow: true do
         member do
@@ -16,12 +16,19 @@ Rails.application.routes.draw do
           post "deny"
         end
       end
-
     end
   end
 
-  resources :games
+  resources :games do
+    resources :users do
+      resources :inscriptions, shallow: true do
+        member do
+          post "inactive"
+        end
+      end
+    end
+  end
+
   resources :users
-  resources :groups
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

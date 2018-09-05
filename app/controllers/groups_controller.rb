@@ -10,6 +10,7 @@ class GroupsController < ApplicationController
   def show
     @pending_requets = @group.requests.pending(@group.id)
     @replied_requests = Request.replied(@group.id)
+    @games = @group.games
   end
 
   def new

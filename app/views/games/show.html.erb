@@ -1,0 +1,45 @@
+<h3><strong>Grupo</strong></h3>
+<h4><%= @game.group.name %><%= link_to " Ver", group_path(@game.group) %></h4>
+
+<h3><strong>Fecha de juego</strong></h3>
+<h4> <%= @game.game_date %></h4>
+
+<h3><strong>Lugar</strong></h3>
+<h4><%= @game.place %></h4>
+
+<h3><strong>Estado del partido</strong></h3>
+<h4> <%= @game.status %> </h4>
+
+<h3><strong>Límite de jugadores</strong></h3>
+<h4> <%= @game.limit_users %> </h4>
+
+<% unless current_user.enrolled(@game) %>
+  <%= link_to('Anotarme', game_user_inscriptions_path(game_id: @game.id, user_id: current_user.id), method: :post) %>
+<% else %>
+  <p>
+    <% if current_user.enrolled(@game).bench? %>
+      En espera |
+    <% else %>
+      Inscrito |
+    <% end %>
+
+    <%= link_to('Salir', inactive_inscription_path(current_user.enrolled(@game)), method: :post)%>
+  </p>
+<% end %>
+
+
+<h3><strong>Usuarios inscritos (<%= @active_inscriptions.count %>)</strong></h3>
+
+<ul>
+  <% @active_inscriptions.each do |inscription| %>
+    <li><%= inscription.user.name %> - <%= inscription.user.email %></li>
+  <% end %>
+</ul>
+
+<h3><strong>Usuarios en espera (<%= @bench_inscriptions.count %>)</strong></h3>
+
+<ul>
+  <% @bench_inscriptions.each do |inscription| %>
+    <li><%= inscription.user.name %> - <%= inscription.user.email %></li>
+  <% end %>
+</ul>

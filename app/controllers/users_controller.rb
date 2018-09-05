@@ -4,6 +4,7 @@ class UsersController < ApplicationController
 
   def show
     @groups = @user.groups
+    @inscriptions = @user.inscriptions.where(status: [:active, :bench])
   end
 
   def edit

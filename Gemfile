@@ -6,6 +6,10 @@ ruby '2.4.4'
 # Authorization
 gem 'cancancan', '~> 2.0'
 
+# Authentication
+gem 'omniauth-facebook'
+gem 'koala'
+
 gem 'rails', '~> 5.2.0'
 gem 'pg'
 gem 'puma', '~> 3.11'

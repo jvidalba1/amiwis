@@ -83,10 +83,10 @@
 </table>
 
 <% if current_user.member?(@group) %>
-  <h3>Partidos</h3>
-  <%# if @group.admin == current_user %>
+  <h3>Partidos activos</h3>
+  <% if @group.admin == current_user %>
     <%= link_to "Nuevo partido", new_group_game_path(group_id: @group.id) %>
-  <%# end %>
+  <% end %>
   <table class="table table-striped">
     <thead>
       <tr>
@@ -95,7 +95,7 @@
       </tr>
     </thead>
     <tbody>
-      <% @games.each do |game| %>
+      <% @current_games.each do |game| %>
         <tr>
           <td><%= game.game_date %></td>
           <td><%= link_to "Ver", group_game_path(group_id: @group.id, id: game.id) %></td>
@@ -120,6 +120,25 @@
             <% end %>
 
           </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+
+  <h3>Partidos pasados o cancelados</h3>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @past_games.each do |game| %>
+        <tr>
+          <td><%= game.game_date %></td>
+          <td><%= link_to "Ver", group_game_path(group_id: @group.id, id: game.id) %></td>
         </tr>
       <% end %>
     </tbody>

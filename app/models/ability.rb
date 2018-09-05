@@ -1,7 +1,7 @@
 class Ability
   include CanCan::Ability
 
-  def initialize(user)
+  def initialize(user, params)
     # Define abilities for the passed in user here. For example:
     #
     #   user ||= User.new # guest user (not logged in)
@@ -24,16 +24,31 @@ class Ability
     # objects.
     # For example, here the user can only update published articles.
     #
+    can :manage, User, :id => user.id
+
     can :create, Group
     can :read, Group
     if user
       can :update, Group, :admin_id => user.id
     end
 
+    can :create, Request
+    can [:accept, :deny], Request do |request|
+      request.group.admin == user
+    end
 
-    # can :read, Request do |request|
-    #   request.group.admin == user
-    # end
+    can [:create, :inactive], Inscription do |inscription|
+      inscription.game.group.users.include?(user)
+    end
+
+    can :read, Game do |game|
+      game.group.users.include?(user)
+    end
+
+    can :create, Game do |game|
+      group = Group.find(params[:group_id])
+      group.admin == user
+    end
 
     #
     # See the wiki for details:

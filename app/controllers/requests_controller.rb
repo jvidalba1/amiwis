@@ -3,6 +3,7 @@ class RequestsController < ApplicationController
   before_action :set_group, only: [:create]
   before_action :set_user, only: [:create]
   before_action :set_request, only: [:accept, :deny]
+  load_and_authorize_resource
 
   def index
   end

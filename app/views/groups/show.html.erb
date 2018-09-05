@@ -13,7 +13,6 @@
 <% end %>
 <%= link_to 'Back', groups_path %>
 
-<%# raise "dsadf" %>
 <% if @group.admin == current_user %>
   <h3>Solicitudes pendientes</h3>
   <% unless @pending_requets.empty? %>
@@ -85,9 +84,9 @@
 
 <% if current_user.member?(@group) %>
   <h3>Partidos</h3>
-  <% if @group.admin == current_user %>
+  <%# if @group.admin == current_user %>
     <%= link_to "Nuevo partido", new_group_game_path(group_id: @group.id) %>
-  <% end %>
+  <%# end %>
   <table class="table table-striped">
     <thead>
       <tr>

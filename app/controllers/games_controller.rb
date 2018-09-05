@@ -1,8 +1,8 @@
 class GamesController < ApplicationController
-  # load_and_authorize_resource
   before_action :authenticate_user!
   before_action :set_group, only: [:new, :create]
   before_action :set_game, only: [:show]
+  load_and_authorize_resource
 
   def show
     @active_inscriptions = Inscription.active(@game.id)
@@ -10,7 +10,7 @@ class GamesController < ApplicationController
   end
 
   def new
-    @game = @group.games.build
+    @game = @group.games.new
   end
 
   def create

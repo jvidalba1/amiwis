@@ -3,6 +3,7 @@ class InscriptionsController < ApplicationController
   before_action :set_game, only: [:create]
   before_action :set_user, only: [:create]
   # before_action :set_inscription, only: [:enroll]
+  load_and_authorize_resource
 
   def create
     @inscription = @game.inscriptions.new(user: @user)
@@ -38,42 +39,7 @@ class InscriptionsController < ApplicationController
     end
   end
 
-  # def accept
-  #   @request.accepted!
-  #   @request.reply_at = Time.now
-  #   @request.group.users << @request.user
-
-  #   respond_to do |format|
-  #     if @request.save
-  #       format.html { redirect_to @request.group, notice: 'Solicitud aceptada.' }
-  #       format.json { render :show, status: :ok, location: @request.group }
-  #     else
-  #       format.html { redirect_to @request.group }
-  #       format.json { render json: @request.errors, status: :unprocessable_entity }
-  #     end
-  #   end
-  # end
-
-  # def deny
-  #   @request.denied!
-  #   @request.reply_at = Time.now
-
-  #   respond_to do |format|
-  #     if @request.save
-  #       format.html { redirect_to @request.group, notice: 'Solicitud rechazada.' }
-  #       format.json { render :show, status: :ok, location: @request.group }
-  #     else
-  #       format.html { redirect_to @request.group }
-  #       format.json { render json: @request.errors, status: :unprocessable_entity }
-  #     end
-  #   end
-  # end
-
   private
-
-    # def set_request
-    #   @request = Request.find(inscription_params[:id])
-    # end
 
     def set_game
       @game = Game.find(inscription_params[:game_id])

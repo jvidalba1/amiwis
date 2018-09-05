@@ -1,7 +1,7 @@
 class GroupsController < ApplicationController
-  load_and_authorize_resource
   before_action :authenticate_user!
   before_action :set_group, only: [:show, :edit, :update, :destroy, :request_entry]
+  load_and_authorize_resource
 
   def index
     @groups = Group.all
@@ -46,18 +46,6 @@ class GroupsController < ApplicationController
         format.json { render json: @group.errors, status: :unprocessable_entity }
       end
     end
-  end
-
-  def destroy
-    # @group.destroy
-    # respond_to do |format|
-    #   format.html { redirect_to groups_url, notice: 'Group was successfully destroyed.' }
-    #   format.json { head :no_content }
-    # end
-  end
-
-  def request_entry
-
   end
 
   private

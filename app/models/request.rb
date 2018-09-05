@@ -1,5 +1,4 @@
 class Request < ApplicationRecord
-
   enum status: [:accepted, :denied, :pending]
 
   belongs_to :user

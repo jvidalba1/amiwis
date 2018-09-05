@@ -30,4 +30,13 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  unauthorized:
+    manage:
+      all: "No estas autorizado para realizar esta acción."
+    # accept:
+    #   request: "Solo el administrador del grupo puede aceptar solicitudes."
+    # deny:
+    #   request: "Solo el administrador del grupo puede rechazar solicitudes."
+    # update:
+    #   project: "Solo el administrador del grupo puede actualizar "
+

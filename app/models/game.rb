@@ -3,11 +3,9 @@ class Game < ApplicationRecord
   has_and_belongs_to_many :users
   has_many :inscriptions
 
-  scope :current_games, -> (group_id) { where(status: [:active, :full], group_id: group_id) }
+  scope :current_games, -> { where(status: [:active, :full]) }
 
   enum status: [:active, :inactive, :full]
-
-
 
   def is_full?
     current_users == limit_users

@@ -1,44 +1,152 @@
-<h2><%= @user.name || "Unknown" %> - <%= @user.email %></h2> <%= link_to("Editar perfil", edit_user_path(@user)) %>
-
-<h4>Grupos inscrito (<%= @user.groups.count %>)</h4>
-<ul>
-  <% @user.groups.each do |group| %>
-    <li>
-      <%= link_to("#{group.name}", group_path(group)) %>
-      <% if group.admin == @user %>
-        Eres admin
-      <% end %>
-    </li>
-  <% end %>
-</ul>
-
-<h4>Solicitudes a grupos</h4>
-<ul>
-  <% @user.requests.each do |request| %>
-    <li>
-      <strong>Grupo</strong> <%= link_to("#{request.group.name}", group_path(request.group)) %>
-      <strong>Estado</strong> <%= request.status %>
-
-      <% if request.pending? %>
-        <strong>At</strong> <%= request.request_date %>
-      <% else %>
-        <strong>At</strong> <%= request.reply_at %>
-      <% end %>
-    </li>
-  <% end %>
-</ul>
-
-<h4>Partidos</h4>
-<ul>
-  <% @inscriptions.each do |i| %>
-    <li>
-      <strong>Fecha </strong><%= i.game.game_date %>                                    |
-      <strong>Grupo </strong><%= i.game.group.name %>                                   |
-      <strong>Estado </strong><%= i.status %>                                           |
-      <%= link_to("Ver", group_game_path(group_id: i.game.group.id, id: i.game.id)) %>  |
-      <%= link_to("Salir", inactive_inscription_path(i), method: :post) %>
-    </li>
-  <% end %>
-</ul>
-
-
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title"><%= @user.name || "Unknown" %> - <%= @user.email %> <%= link_to("Editar perfil", edit_user_registration_path, class: "btn btn-link") %></h3>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="panel panel-primary">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Grupos (<%= @user.groups.count %>)</h3>
+                </div>
+                <div class="panel-body">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Admin</th>
+                        <th scope="col">Creado</th>
+                      </tr>
+                    </thead>
+                    <% @user.groups.each do |group| %>
+                      <tbody>
+                        <tr>
+                          <th scope="row">
+                            <%= group.id %>
+                          </th>
+                          <td>
+                            <%= group.name.humanize %>
+                          </td>
+                          <td>
+                            <% if group.admin == current_user %>
+                              Tú
+                            <% else %>
+                              <%= group.admin.name.humanize %>
+                            <% end %>
+                          </td>
+                          <td>
+                            <%= group.created_at %>
+                          </td>
+                        </tr>
+                      </tbody>
+                    <% end %>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="panel panel-primary">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Solicitudes a grupos</h3>
+                </div>
+                <div class="panel-body">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Grupo</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Fecha de estado</th>
+                      </tr>
+                    </thead>
+                    <% @user.requests.each do |request| %>
+                      <tbody>
+                        <tr>
+                          <th scope="row">
+                            <%= request.id %>
+                          </th>
+                          <td>
+                            <%= link_to request.group.name.humanize, group_path(request.group) %>
+                          </td>
+                          <td>
+                            <%= request.status %>
+                          </td>
+                          <td>
+                            <% if request.pending? %>
+                              <%= request.request_date %>
+                            <% else %>
+                              <%= request.reply_at %>
+                            <% end %>
+                          </td>
+                        </tr>
+                      </tbody>
+                    <% end %>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="panel panel-primary">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Partidos (<%= @inscriptions.count %>)</h3>
+                </div>
+                <div class="panel-body">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Grupo</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Lugar</th>
+                        <th scope="col">Estado partido</th>
+                        <th scope="col">Mi Estado</th>
+                        <th scope="col">Acciones</th>
+                      </tr>
+                    </thead>
+                    <% @inscriptions.each do |inscription| %>
+                      <tbody>
+                        <tr>
+                          <th scope="row">
+                            <%= inscription.id %>
+                          </th>
+                          <td>
+                            <%= link_to inscription.game.group.name.humanize, group_path(inscription.game.group) %>
+                          </td>
+                          <td>
+                            <%= link_to inscription.game.game_date, group_game_path(group_id: inscription.game.group.id, id: inscription.game.id) %>
+                          </td>
+                          <td>
+                            <%= inscription.game.place.try(:humanize) %>
+                          </td>
+                          <td>
+                            <%= inscription.game.status %>
+                          </td>
+                          <td>
+                            <%= inscription.status %>
+                          </td>
+                          <td>
+                            <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
+                              <%= link_to("Ver partido", group_game_path(group_id: inscription.game.group.id, id: inscription.game.id), class: "btn btn-primary") %>
+                              <%= link_to("Salir", inactive_inscription_path(inscription), method: :post, class: "btn btn-danger", data: { confirm: "Estas seguro?" }) %>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    <% end %>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <%= link_to "Atrás", :back %>
+      </div>
+    </div>
+  </div>
+</div>

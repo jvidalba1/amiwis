@@ -8,6 +8,7 @@ Bundler.require(*Rails.groups)
 
 module Amiwis
   class Application < Rails::Application
+    config.time_zone = 'Bogota'
 
     # Add application.yml ENV variables
     config.before_configuration do

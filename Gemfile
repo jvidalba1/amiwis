@@ -8,6 +8,10 @@ gem 'cancancan', '~> 2.0'
 
 # Authentication
 gem 'omniauth-facebook'
+
+# Cronjobs
+gem 'whenever'
+
 gem 'koala'
 
 gem 'rails', '~> 5.2.0'

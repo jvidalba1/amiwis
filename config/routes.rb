@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   root to: "pages#landing"
 
   get 'pages/landing'
+  get 'pages/styles'
 
   resources :groups do
     resources :games

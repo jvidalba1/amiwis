@@ -1,147 +1,197 @@
-<p>
-  <strong>Nombre del grupo:</strong>
-  <%= @group.name %>
-</p>
 
-<p>
-  <strong>Administrador</strong>
-  <%= @group.admin.name %>
-</p>
-
-<% if can? :update, @group %>
-  <%= link_to 'Edit', edit_group_path(@group) %> |
-<% end %>
-<%= link_to 'Back', groups_path %>
-
-<% if @group.admin == current_user %>
-  <h3>Solicitudes pendientes</h3>
-  <% unless @pending_requets.empty? %>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Nombre de usuario</th>
-          <th colspan="2"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @pending_requets.each do |request| %>
-          <tr>
-            <td><%= request.user.name %></td>
-            <td><%= link_to 'Aceptar', accept_request_path(request), method: :post %></td>
-            <td><%= link_to 'Rechazar', deny_request_path(request), method: :post %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  <% else %>
-    <h5>No hay solicitudes.</h5>
-  <% end %>
-
-  </br>
-
-  <h3>Solicitudes con respuesta</h3>
-  <% unless @replied_requests.empty? %>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Nombre de usuario</th>
-          <th>Estado</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @replied_requests.each do |request| %>
-          <tr>
-            <td><%= request.user.name %></td>
-            <td><%= request.status %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  <% else %>
-    <h5>No hay solicitudes.</h5>
-  <% end %>
-
-  </br>
-<% end %>
-
-<h3>Miembros</h3>
-<table class="table">
-  <thead>
-    <tr>
-      <th>Nombre de usuario</th>
-      <th>Email</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @group.users.each do |user| %>
-      <tr>
-        <td><%= user.name %></td>
-        <td><%= user.email %></td>
-      </tr>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      <%= @group.name.try(:humanize) %> - Admin: <%= @group.admin.try(:name) %>
+    </h3>
+    </br>
+    <% if can? :update, @group %>
+      <%= link_to 'Editar', edit_group_path(@group) %> |
     <% end %>
-  </tbody>
-</table>
+    <%= link_to 'Atrás', groups_path %>
+  </div>
+  <div class="panel-body">
 
-<% if current_user.member?(@group) %>
-  <h3>Partidos activos</h3>
-  <% if @group.admin == current_user %>
-    <%= link_to "Nuevo partido", new_group_game_path(group_id: @group.id) %>
-  <% end %>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Fecha</th>
-        <th colspan="2"></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @current_games.each do |game| %>
-        <tr>
-          <td><%= game.game_date %></td>
-          <td><%= link_to "Ver", group_game_path(group_id: @group.id, id: game.id) %></td>
-          <td>
-            <% unless current_user.enrolled(game) %>
-              <%= link_to('Anotarme',
-                game_user_inscriptions_path(
-                  game_id: game.id,
-                  user_id: current_user.id
-                ),
-                method: :post
-              )%>
-            <% else %>
-              <p>
-                <% if current_user.enrolled(game).bench? %>
-                  En espera |
-                <% else %>
-                  Inscrito |
-                <% end %>
-                <%= link_to('Salir', inactive_inscription_path(current_user.enrolled(game)), method: :post)%>
-              </p>
+    <% if current_user.member?(@group) %>
+      <!-- PARTIDOS ACTIVOS -->
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h3 class="panel-title">Partidos activos</h3>
+        </div>
+        <div class="panel-body">
+          <% if @group.admin == current_user %>
+            <%= link_to "Nuevo partido", new_group_game_path(group_id: @group.id), class: "btn btn-primary" %>
+          <% end %>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th colspan="2"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @current_games.each do |game| %>
+                <tr>
+                  <td><%= l(game.game_date, format: :full) %></td>
+                  <td><%= link_to "Ver", group_game_path(group_id: @group.id, id: game.id), class: "btn btn-primary" %></td>
+                  <td>
+                    <% unless current_user.enrolled(game) %>
+                      <%= link_to('Anotarme',
+                        game_user_inscriptions_path(
+                          game_id: game.id,
+                          user_id: current_user.id
+                        ),
+                        class: "btn btn-success",
+                        method: :post
+                      )%>
+                    <% else %>
+                      <p>
+                        <% if current_user.enrolled(game).bench? %>
+                          En espera
+                        <% else %>
+                          Inscrito
+                        <% end %>
+                        <%= link_to('Salir', inactive_inscription_path(current_user.enrolled(game)), class: "btn btn-warning", method: :post)%>
+                      </p>
+                    <% end %>
+
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- FIN PARTIDOS ACTIVOS -->
+    <% end %>
+
+    <!-- MIEMBROS -->
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Miembros</h3>
+      </div>
+      <div class="panel-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Nombresuario</th>
+              <th>Email</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @group.users.each do |user| %>
+              <tr>
+                <td><%= user.name.try(:humanize) %></td>
+                <td><%= user.email %></td>
+              </tr>
             <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- FIN MIEMBROS -->
 
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+    <% if current_user.member?(@group) %>
+      <!-- PARTIDOS PASADOS O CANCELADOS -->
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h3 class="panel-title">Partidos pasados o cancelados</h3>
+        </div>
+        <div class="panel-body">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @past_games.each do |game| %>
+                <tr>
+                  <td><%= l(game.game_date, format: :full) %></td>
+                  <td><%= game.status %> </td>
+                  <td><%= link_to "Ver", group_game_path(group_id: @group.id, id: game.id), class: "btn btn-primary" %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- FIN PARTIDOS PASADOS O CANCELADOS -->
+    <% end %>
 
 
-  <h3>Partidos pasados o cancelados</h3>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Fecha</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @past_games.each do |game| %>
-        <tr>
-          <td><%= game.game_date %></td>
-          <td><%= link_to "Ver", group_game_path(group_id: @group.id, id: game.id) %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+    <% if @group.admin == current_user %>
+      <!-- SOLICITUDES PENDIENTES -->
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h3 class="panel-title">Solicitudes pendientes</h3>
+        </div>
+        <div class="panel-body">
+          <% unless @pending_requets.empty? %>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Nombre de usuario</th>
+                  <th colspan="2"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @pending_requets.each do |request| %>
+                  <tr>
+                    <td><%= request.user.try(:name) %></td>
+                    <td><%= link_to 'Aceptar', accept_request_path(request), method: :post, class: "btn btn-primary" %></td>
+                    <td><%= link_to 'Rechazar', deny_request_path(request), method: :post, class: "btn btn-danger" %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          <% else %>
+            <h5>No hay solicitudes.</h5>
+          <% end %>
+        </div>
+      </div>
+      <!-- FIN SOLICITUDES PENDIENTES -->
 
-<% end %>
+      <!-- SOLICITUDES PASADAS -->
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h3 class="panel-title">Solicitudes pasadas</h3>
+        </div>
+        <div class="panel-body">
+          <% unless @replied_requests.empty? %>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Nombre de usuario</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @replied_requests.each do |request| %>
+                  <tr>
+                    <td><%= request.user.name %></td>
+                    <td><%= request.status %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          <% else %>
+            <h5>No hay solicitudes.</h5>
+          <% end %>
+        </div>
+      </div>
+      <!-- FIN SOLICITUDES PASADAS -->
+    <% end %>
+
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Panel title</h3>
+      </div>
+      <div class="panel-body">
+        Panel content
+      </div>
+    </div>
+  </div>
+</div>

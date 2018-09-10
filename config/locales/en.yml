@@ -33,10 +33,26 @@ en:
   unauthorized:
     manage:
       all: "No estas autorizado para realizar esta acción."
-    # accept:
-    #   request: "Solo el administrador del grupo puede aceptar solicitudes."
-    # deny:
-    #   request: "Solo el administrador del grupo puede rechazar solicitudes."
-    # update:
-    #   project: "Solo el administrador del grupo puede actualizar "
+  date:
+    formats:
+      normal: "%A, %d de %B de %Y"
+      full: "%A, %d de %B de %Y - %I:%M %p"
+    day_names: [~, Lunes, Martes, Miercoles, Jueves, Viernes, Sabado, Domingo]
+    month_names: [~, Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre]
+    abbr_month_names: [~, Ene, Feb, Mar, Abr, May, Jun, Jul, Ago, Sep, Oct, Nov, Dic]
+  time:
+    formats:
+      full: "%A, %d de %B de %Y - %I:%M %p"
+    day_names: [~, Lunes, Martes, Miercoles, Jueves, Viernes, Sabado, Domingo]
+    month_names: [~, Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre]
+    abbr_month_names: [~, Ene, Feb, Mar, Abr, May, Jun, Jul, Ago, Sep, Oct, Nov, Dic]
+  activerecord:
+    attributes:
+      game/status:
+        active: "Activo"
+        inactive: "Inactivo"
+        full: "Lleno"
+        cancel: "Cancelado"
+
+
 

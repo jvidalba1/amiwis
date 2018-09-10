@@ -10,7 +10,7 @@ class GroupsController < ApplicationController
   def show
     @pending_requets = @group.requests.pending(@group.id)
     @replied_requests = Request.replied(@group.id)
-    @current_games = @group.games.where(status: [:active, :full] )
+    @current_games = @group.games.where(status: [:active, :full]).order("game_date ASC")
     @past_games = @group.games.where(status: [:inactive])
   end
 

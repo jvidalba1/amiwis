@@ -26,6 +26,9 @@ gem 'devise'
 
 gem 'jquery-rails'
 gem 'jquery-turbolinks'
+gem 'jquery-ui-rails'
+
+gem "time_splitter"
 
 
 gem 'twitter-bootswatch-rails'
@@ -62,6 +65,8 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+
+  gem "letter_opener"
 end
 
 group :test do

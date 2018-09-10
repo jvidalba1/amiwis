@@ -1,43 +1,79 @@
-<h3><strong>Grupo</strong></h3>
-<h4><%= @game.group.name %><%= link_to " Ver", group_path(@game.group) %></h4>
 
-<h3><strong>Fecha de juego</strong></h3>
-<h4> <%= @game.game_date %></h4>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Información de partido</h3>
+  </div>
+  <div class="panel-body">
+    <ul class="list-group">
+      <li class="list-group-item"><strong>Grupo </strong><%= @game.group.name %><%= link_to " Ver", group_path(@game.group) %></li>
+      <li class="list-group-item"><strong>Fecha de juego </strong><%= l(@game.game_date.try(:to_date), format: :normal) %></li>
+      <li class="list-group-item"><strong>Hora de juego </strong><%= @game.game_date.strftime("%I:%M %p") %></li>
+      <li class="list-group-item"><strong>Lugar </strong><%= @game.place.try(:humanize) %></li>
+      <li class="list-group-item"><strong>Estado del partido </strong><%= @game.status %></li>
+      <li class="list-group-item"><strong>Límites de jugadores </strong><%= @game.limit_users %></li>
+      <li class="list-group-item">
+        <% unless current_user.enrolled(@game) %>
+          <%= link_to('Anotarme', game_user_inscriptions_path(game_id: @game.id, user_id: current_user.id), method: :post, class: "btn btn-success") %>
+        <% else %>
+          <p>
+            <% if current_user.enrolled(@game).bench? %>
+              En espera
+            <% else %>
+              Inscrito
+            <% end %>
+            <%= link_to('Salir', inactive_inscription_path(current_user.enrolled(@game)), method: :post, class: "btn btn-warning")%>
+          </p>
+        <% end %>
+      </li>
+    </ul>
 
-<h3><strong>Lugar</strong></h3>
-<h4><%= @game.place %></h4>
+    <div class="panel panel-success">
+      <div class="panel-heading">
+        <h3 class="panel-title">Usuarios inscritos (<%= @active_inscriptions.count %>)</h3>
+      </div>
+      <div class="panel-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Nombre de usuario</th>
+              <th>Email</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @active_inscriptions.each do |inscription| %>
+              <tr>
+                <td><%= inscription.user.name %></td>
+                <td><%= inscription.user.email %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-<h3><strong>Estado del partido</strong></h3>
-<h4> <%= @game.status %> </h4>
+    <div class="panel panel-warning">
+      <div class="panel-heading">
+        <h3 class="panel-title">Usuarios en espera (<%= @bench_inscriptions.count %>)</h3>
+      </div>
+      <div class="panel-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Nombre de usuario</th>
+              <th>Email</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @bench_inscriptions.each do |inscription| %>
+              <tr>
+                <td><%= inscription.user.name %></td>
+                <td><%= inscription.user.email %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
 
-<h3><strong>Límite de jugadores</strong></h3>
-<h4> <%= @game.limit_users %> </h4>
-
-<% unless current_user.enrolled(@game) %>
-  <%= link_to('Anotarme', game_user_inscriptions_path(game_id: @game.id, user_id: current_user.id), method: :post) %>
-<% else %>
-  <p>
-    <% if current_user.enrolled(@game).bench? %>
-      En espera |
-    <% else %>
-      Inscrito |
-    <% end %>
-
-    <%= link_to('Salir', inactive_inscription_path(current_user.enrolled(@game)), method: :post)%>
-  </p>
-<% end %>
-<h3><strong>Usuarios inscritos (<%= @active_inscriptions.count %>)</strong></h3>
-
-<ul>
-  <% @active_inscriptions.each do |inscription| %>
-    <li><%= inscription.user.name %> - <%= inscription.user.email %></li>
-  <% end %>
-</ul>
-
-<h3><strong>Usuarios en espera (<%= @bench_inscriptions.count %>)</strong></h3>
-
-<ul>
-  <% @bench_inscriptions.each do |inscription| %>
-    <li><%= inscription.user.name %> - <%= inscription.user.email %></li>
-  <% end %>
-</ul>

@@ -14,7 +14,7 @@ class InscriptionsController < ApplicationController
     respond_to do |format|
       if @inscription.save
         message = @inscription.bench? ? "Has quedado en espera." : "Te has inscrito al partido exitosamente."
-        format.html { redirect_to @game.group, notice: message }
+        format.html { redirect_to @inscription.game, notice: message }
         format.json { render :show, status: :created, location: @inscription }
       else
         format.html { render :new }

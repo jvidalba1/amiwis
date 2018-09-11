@@ -22,44 +22,48 @@
           <% if @group.admin == current_user %>
             <%= link_to "Nuevo partido", new_group_game_path(group_id: @group.id), class: "btn btn-primary" %>
           <% end %>
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>Fecha</th>
-                <th colspan="2"></th>
-              </tr>
-            </thead>
-            <tbody>
-              <% @current_games.each do |game| %>
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
                 <tr>
-                  <td><%= l(game.game_date, format: :full) %></td>
-                  <td><%= link_to "Ver", group_game_path(group_id: @group.id, id: game.id), class: "btn btn-primary" %></td>
-                  <td>
-                    <% unless current_user.enrolled(game) %>
-                      <%= link_to('Anotarme',
-                        game_user_inscriptions_path(
-                          game_id: game.id,
-                          user_id: current_user.id
-                        ),
-                        class: "btn btn-success",
-                        method: :post
-                      )%>
-                    <% else %>
-                      <p>
-                        <% if current_user.enrolled(game).bench? %>
-                          En espera
-                        <% else %>
-                          Inscrito
-                        <% end %>
-                        <%= link_to('Salir', inactive_inscription_path(current_user.enrolled(game)), class: "btn btn-warning", method: :post)%>
-                      </p>
-                    <% end %>
-
-                  </td>
+                  <th>Fecha</th>
+                  <th>Estado</th>
+                  <th colspan="2"></th>
                 </tr>
-              <% end %>
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                <% @current_games.each do |game| %>
+                  <tr>
+                    <td><%= l(game.game_date, format: :full) %></td>
+                    <td><%= Game.human_enum_name(:status, game.status) %></td>
+                    <td><%= link_to "Ver", group_game_path(group_id: @group.id, id: game.id), class: "btn btn-primary" %></td>
+                    <td>
+                      <% unless current_user.enrolled(game) %>
+                        <%= link_to('Anotarme',
+                          game_user_inscriptions_path(
+                            game_id: game.id,
+                            user_id: current_user.id
+                          ),
+                          class: "btn btn-success",
+                          method: :post
+                        )%>
+                      <% else %>
+                        <p>
+                          <% if current_user.enrolled(game).bench? %>
+                            En espera
+                          <% else %>
+                            Inscrito
+                          <% end %>
+                          <%= link_to('Salir', inactive_inscription_path(current_user.enrolled(game)), class: "btn btn-warning", method: :post)%>
+                        </p>
+                      <% end %>
+
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
       <!-- FIN PARTIDOS ACTIVOS -->
@@ -71,22 +75,30 @@
         <h3 class="panel-title">Miembros</h3>
       </div>
       <div class="panel-body">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Nombresuario</th>
-              <th>Email</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @group.users.each do |user| %>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
               <tr>
-                <td><%= user.name.try(:humanize) %></td>
-                <td><%= user.email %></td>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Posición 1</th>
+                <th>Posición 2</th>
+                <th>Nivel dado</th>
               </tr>
-            <% end %>
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              <% @group.users.each do |user| %>
+                <tr>
+                  <td><%= user.name.try(:humanize) %></td>
+                  <td><%= user.email %></td>
+                  <td><%= User.human_enum_name(:position, user.position) %></td>
+                  <td><%= User.human_enum_name(:position, user.position2) %></td>
+                  <td><%= user.level %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
     <!-- FIN MIEMBROS -->

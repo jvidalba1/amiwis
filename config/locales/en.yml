@@ -48,11 +48,52 @@ en:
     abbr_month_names: [~, Ene, Feb, Mar, Abr, May, Jun, Jul, Ago, Sep, Oct, Nov, Dic]
   activerecord:
     attributes:
-      game/status:
-        active: "Activo"
-        inactive: "Inactivo"
-        full: "Lleno"
-        cancel: "Cancelado"
-
+      user:
+        name: "Nombre"
+        email: "Email"
+        position: "Posición 1"
+        position2: "Posición 2"
+        positions:
+          goalkeeper: "Portero"
+          defense: "Defensa"
+          midfielder: "Mediocampista"
+          forward: "Delantero"
+      game:
+        game_date: "Fecha de juego"
+        status: "Estado"
+        limit_users: "Límite de usuarios"
+        place: "Lugar"
+        statuses:
+          active: "Activo"
+          inactive: "Inactivo"
+          cancel: "Cancelado"
+          full: "Lleno"
+      inscription:
+        statuses:
+          active: "Activo"
+          inactive: "Inactivo"
+          bench: "En espera"
+      group:
+        name: "Nombre"
+    errors:
+      models:
+        user:
+          attributes:
+            name:
+              blank: "no puede estar en blanco."
+            email:
+              blank: "no puede estar en blanco"
+        group:
+          attributes:
+            name:
+              blank: "no puede estar en blanco."
+        game:
+          attributes:
+            game_date:
+              blank: "no puede estar en blanco."
+            limit_users:
+              blank: "no puede estar en blanco."
+            place:
+              blank: "no puede estar en blanco."
 
 

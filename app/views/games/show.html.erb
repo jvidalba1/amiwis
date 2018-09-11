@@ -9,7 +9,7 @@
       <li class="list-group-item"><strong>Fecha de juego </strong><%= l(@game.game_date.try(:to_date), format: :normal) %></li>
       <li class="list-group-item"><strong>Hora de juego </strong><%= @game.game_date.strftime("%I:%M %p") %></li>
       <li class="list-group-item"><strong>Lugar </strong><%= @game.place.try(:humanize) %></li>
-      <li class="list-group-item"><strong>Estado del partido </strong><%= @game.status %></li>
+      <li class="list-group-item"><strong>Estado del partido </strong><%= Game.human_enum_name(:status, @game.status) %></li>
       <li class="list-group-item"><strong>Límites de jugadores </strong><%= @game.limit_users %></li>
       <li class="list-group-item">
         <% unless current_user.enrolled(@game) %>

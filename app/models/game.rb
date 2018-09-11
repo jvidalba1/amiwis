@@ -10,6 +10,8 @@ class Game < ApplicationRecord
   enum status: [:active, :inactive, :full]
 
   validates :game_date, presence: true
+  validates :limit_users, presence: true
+  validates :place, presence: true
 
   split_accessor :game_date
 

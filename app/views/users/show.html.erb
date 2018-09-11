@@ -7,10 +7,66 @@
         </div>
         <div class="panel-body">
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
               <div class="panel panel-primary">
                 <div class="panel-heading">
-                  <h3 class="panel-title">Grupos (<%= @user.groups.count %>)</h3>
+                  <h3 class="panel-title">Mis partidos activos (<%= @inscriptions.count %>)</h3>
+                </div>
+                <div class="panel-body">
+                  <div class="table-responsive">
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">Grupo</th>
+                          <th scope="col">Fecha</th>
+                          <th scope="col">Lugar</th>
+                          <th scope="col">Estado partido</th>
+                          <th scope="col">Mi Estado</th>
+                          <th scope="col">Acciones</th>
+                        </tr>
+                      </thead>
+                      <% @inscriptions.each do |inscription| %>
+                        <tbody>
+                          <tr>
+                            <th scope="row">
+                              <%= inscription.id %>
+                            </th>
+                            <td>
+                              <%= link_to inscription.game.group.name.humanize, group_path(inscription.game.group) %>
+                            </td>
+                            <td>
+                              <%= l(inscription.game.game_date, format: :full) %>
+                            </td>
+                            <td>
+                              <%= inscription.game.place.try(:humanize) %>
+                            </td>
+                            <td>
+                              <%= Game.human_enum_name(:status, inscription.game.status) %>
+                            </td>
+                            <td>
+                              <%= Inscription.human_enum_name(:status, inscription.status) %>
+                            </td>
+                            <td>
+                              <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
+                                <%= link_to("Ver partido", group_game_path(group_id: inscription.game.group.id, id: inscription.game.id), class: "btn btn-primary") %>
+                                <%= link_to("Salir", inactive_inscription_path(inscription), method: :post, class: "btn btn-danger", data: { confirm: "Estas seguro?" }) %>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      <% end %>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="panel panel-primary">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Grupos inscrito (<%= @user.groups.count %>)</h3>
                 </div>
                 <div class="panel-body">
                   <table class="table table-striped">
@@ -19,7 +75,6 @@
                         <th scope="col">#</th>
                         <th scope="col">Nombre</th>
                         <th scope="col">Admin</th>
-                        <th scope="col">Creado</th>
                       </tr>
                     </thead>
                     <% @user.groups.each do |group| %>
@@ -38,9 +93,6 @@
                               <%= group.admin.name.humanize %>
                             <% end %>
                           </td>
-                          <td>
-                            <%= group.created_at %>
-                          </td>
                         </tr>
                       </tbody>
                     <% end %>
@@ -48,7 +100,9 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-6">
+          </div>
+          <div class="row">
+            <div class="col-md-12">
               <div class="panel panel-primary">
                 <div class="panel-heading">
                   <h3 class="panel-title">Solicitudes a grupos</h3>
@@ -81,60 +135,6 @@
                             <% else %>
                               <%= request.reply_at %>
                             <% end %>
-                          </td>
-                        </tr>
-                      </tbody>
-                    <% end %>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              <div class="panel panel-primary">
-                <div class="panel-heading">
-                  <h3 class="panel-title">Partidos (<%= @inscriptions.count %>)</h3>
-                </div>
-                <div class="panel-body">
-                  <table class="table table-striped">
-                    <thead>
-                      <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Grupo</th>
-                        <th scope="col">Fecha</th>
-                        <th scope="col">Lugar</th>
-                        <th scope="col">Estado partido</th>
-                        <th scope="col">Mi Estado</th>
-                        <th scope="col">Acciones</th>
-                      </tr>
-                    </thead>
-                    <% @inscriptions.each do |inscription| %>
-                      <tbody>
-                        <tr>
-                          <th scope="row">
-                            <%= inscription.id %>
-                          </th>
-                          <td>
-                            <%= link_to inscription.game.group.name.humanize, group_path(inscription.game.group) %>
-                          </td>
-                          <td>
-                            <%= link_to inscription.game.game_date, group_game_path(group_id: inscription.game.group.id, id: inscription.game.id) %>
-                          </td>
-                          <td>
-                            <%= inscription.game.place.try(:humanize) %>
-                          </td>
-                          <td>
-                            <%= inscription.game.status %>
-                          </td>
-                          <td>
-                            <%= inscription.status %>
-                          </td>
-                          <td>
-                            <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
-                              <%= link_to("Ver partido", group_game_path(group_id: inscription.game.group.id, id: inscription.game.id), class: "btn btn-primary") %>
-                              <%= link_to("Salir", inactive_inscription_path(inscription), method: :post, class: "btn btn-danger", data: { confirm: "Estas seguro?" }) %>
-                            </div>
                           </td>
                         </tr>
                       </tbody>

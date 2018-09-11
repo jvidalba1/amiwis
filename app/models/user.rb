@@ -5,18 +5,35 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
+  attr_accessor :skip_registration_validation
+
+  enum position: [:goalkeeper, :defense, :midfielder, :forward], _prefix: true
+
+  enum position2: [:goalkeeper, :defense, :midfielder, :forward], _prefix: true
+
+  validates :email, presence: true, uniqueness: true
+  validates :name, presence: true, unless: :skip_registration_validation
+  validate :validate_positions, unless: :skip_registration_validation
+
   has_many :requests
   has_many :inscriptions
 
   has_and_belongs_to_many :games
   has_and_belongs_to_many :groups
 
+  def validate_positions
+    if position == position2
+      errors.add("Posición", " no puede estar repetido")
+    end
+  end
+
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
       user.email = auth.info.email
       user.password = Devise.friendly_token[0,20]
-      user.name = auth.info.name   # assuming the user model has a name
-      user.avatar = auth.info.image # assuming the user model has an image
+      user.name = auth.info.name
+      user.avatar = auth.info.image
+      user.skip_registration_validation = true
       # If you are using confirmable and the provider(s) you use validate emails,
       # uncomment the line below to skip the confirmation emails.
       # user.skip_confirmation!

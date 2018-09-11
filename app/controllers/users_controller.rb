@@ -5,7 +5,7 @@ class UsersController < ApplicationController
 
   def show
     @groups = @user.groups
-    @inscriptions = @user.inscriptions.where(status: [:active, :bench])
+    @inscriptions = @user.inscriptions.includes(:game).where(status: [:active, :bench]).order("games.game_date ASC")
   end
 
   def edit

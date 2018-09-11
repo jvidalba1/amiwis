@@ -4,44 +4,74 @@
     <div class="col-md-6">
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h3 class="panel-title">Editar información de usuario</h3>
+          <h3 class="panel-title">Información de usuario</h3>
         </div>
         <div class="panel-body">
           <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
             <%= devise_error_messages! %>
 
             <div class="form-group">
-              <%= f.label :name, "Nombre" %><br />
+              <%= f.label :name, "Nombre" %>
               <%= f.text_field :name, autofocus: true, class: "form-control" %>
             </div>
 
             <div class="form-group">
-              <%= f.label :email %><br />
+              <%= f.label :email %>
               <%= f.email_field :email, autocomplete: "email", class: "form-control" %>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= f.label :position, "Posición de preferencia 1" %>
+                  <%= f.select :position, User.positions.keys.map { |p| [User.human_enum_name(:position, p), p] }, {}, { :class => 'form-control' } %>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= f.label :position2, "Posición de preferencia 2" %>
+                  <%= f.select :position2, User.positions.keys.reverse.map { |p| [User.human_enum_name(:position, p), p] }, {}, { :class => 'form-control' } %>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <%= f.label :level, "Nivel " %> <i>(Cómo consideras que juegas de 1 a 10, siendo 1 muy malo y 10 muy bueno.)</i><br />
+              <%= f.select :level, (1..10), {}, { :class => 'form-control' } %>
+              <em>Esto es con la intención de hacer la distribución de equipos lo más equitativo posible.</em>
             </div>
 
             <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
               <div>Esperando confirmación para: <%= resource.unconfirmed_email %></div>
             <% end %>
 
-            <div class="form-group">
-              <%= f.label :password %> <i>(Déjalo en blanco si no lo quieres cambiar)</i><br />
-              <%= f.password_field :password, autocomplete: "off", class: "form-control" %>
-              <% if @minimum_password_length %>
-                <em><%= @minimum_password_length %> caracteres mínimo</em>
-              <% end %>
+
+            <div class="panel panel-warning">
+              <div class="panel-heading">
+                <h3 class="panel-title">Cambiar contraseña <i>(Déjalo en blanco si no lo quieres cambiar)</i></h3>
+              </div>
+              <div class="panel-body">
+
+                <div class="form-group">
+                  <%= f.label :password, "Contraseña" %> <br />
+                  <%= f.password_field :password, autocomplete: "off", class: "form-control" %>
+                  <% if @minimum_password_length %>
+                    <em><%= @minimum_password_length %> caracteres mínimo</em>
+                  <% end %>
+                </div>
+
+                <div class="form-group">
+                  <%= f.label :password_confirmation, "Confirmación de contraseña" %><br />
+                  <%= f.password_field :password_confirmation, autocomplete: "off", class: "form-control" %>
+                </div>
+              </div>
             </div>
 
-            <div class="field">
-              <%= f.label :password_confirmation, "Confirmación de contraseña" %><br />
-              <%= f.password_field :password_confirmation, autocomplete: "off", class: "form-control" %>
-            </div>
+            <!-- <div class="form-group">
+              <%# f.label :current_password, "Contraseña actual" %> <i>(Es necesario tu contraseña actual para guardar los cambios)</i><br />
+              <%# f.password_field :current_password, autocomplete: "off", class: "form-control" %>
+            </div> -->
 
-            <div class="field">
-              <%= f.label :current_password, "Contraseña actual" %> <i>(Es necesario tu contraseña actual para guardar los cambios)</i><br />
-              <%= f.password_field :current_password, autocomplete: "off", class: "form-control" %>
-            </div>
-            </br>
             <div class="actions">
               <%= f.submit "Actualizar", class: "btn btn-primary" %>
             </div>

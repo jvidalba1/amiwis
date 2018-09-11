@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_05_221846) do
+ActiveRecord::Schema.define(version: 2018_09_10_224817) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -72,6 +72,19 @@ ActiveRecord::Schema.define(version: 2018_09_05_221846) do
     t.index ["user_id"], name: "index_requests_on_user_id"
   end
 
+  create_table "teams", force: :cascade do |t|
+    t.string "identify"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "teams_users", id: false, force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "team_id"
+    t.index ["team_id"], name: "index_teams_users_on_team_id"
+    t.index ["user_id"], name: "index_teams_users_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -90,6 +103,9 @@ ActiveRecord::Schema.define(version: 2018_09_05_221846) do
     t.string "uid"
     t.string "avatar"
     t.string "provider"
+    t.integer "position"
+    t.integer "level"
+    t.integer "position2"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

@@ -3,6 +3,8 @@ class Group < ApplicationRecord
   has_many :requests
   has_and_belongs_to_many :users
 
+  validates :name, presence: true, uniqueness: true
+
   def assign_admin(user)
     self.admin_id = user.id
   end

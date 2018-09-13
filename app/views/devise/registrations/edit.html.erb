@@ -35,11 +35,11 @@
               </div>
             </div>
 
-            <div class="form-group">
-              <%= f.label :level, "Nivel " %> <i>(Cómo consideras que juegas de 1 a 10, siendo 1 muy malo y 10 muy bueno.)</i><br />
-              <%= f.select :level, (1..10), {}, { :class => 'form-control' } %>
+            <!-- <div class="form-group">
+              <%# f.label :level, "Nivel " %> <i>(Cómo consideras que juegas de 1 a 10, siendo 1 muy malo y 10 muy bueno.)</i><br />
+              <%# f.select :level, (1..10), {}, { :class => 'form-control' } %>
               <em>Esto es con la intención de hacer la distribución de equipos lo más equitativo posible.</em>
-            </div>
+            </div> -->
 
             <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
               <div>Esperando confirmación para: <%= resource.unconfirmed_email %></div>

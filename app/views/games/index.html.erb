@@ -1,0 +1,86 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Mis Partidos</h3>
+  </div>
+  <div class="panel-body">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Activos</h3>
+      </div>
+      <div class="panel-body">
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Grupo</th>
+                <th scope="col">Fecha y hora</th>
+                <th scope="col">Lugar</th>
+                <th scope="col">Mi Estado</th>
+                <th scope="col">Acciones</th>
+              </tr>
+            </thead>
+            <% @user_active_games.each do |inscription| %>
+              <tbody>
+                <tr>
+                  <td>
+                    <%= link_to inscription.game.group.name.humanize, group_path(inscription.game.group) %>
+                  </td>
+                  <td>
+                    <%= l(inscription.game.game_date, format: :full) %>
+                  </td>
+                  <td>
+                    <%= inscription.game.place.try(:humanize) %>
+                  </td>
+                  <td>
+                    <%= Inscription.human_enum_name(:status, inscription.status) %>
+                  </td>
+                  <td>
+                    <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
+                      <%= link_to("Ver partido", group_game_path(group_id: inscription.game.group.id, id: inscription.game.id), class: "btn btn-primary") %>
+                      <%= link_to("Salir", inactive_inscription_path(inscription), method: :post, class: "btn btn-danger", data: { confirm: "Estas seguro?" }) %>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            <% end %>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Pasados</h3>
+      </div>
+      <div class="panel-body">
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Grupo</th>
+                <th scope="col">Fecha y hora</th>
+                <th scope="col">Lugar</th>
+              </tr>
+            </thead>
+            <% @user_past_games.each do |inscription| %>
+              <tbody>
+                <tr>
+                  <td>
+                    <%= link_to inscription.game.group.name.humanize, group_path(inscription.game.group) %>
+                  </td>
+                  <td>
+                    <%= l(inscription.game.game_date, format: :full) %>
+                  </td>
+                  <td>
+                    <%= inscription.game.place.try(:humanize) %>
+                  </td>
+                </tr>
+              </tbody>
+            <% end %>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

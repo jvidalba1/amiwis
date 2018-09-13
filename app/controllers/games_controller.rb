@@ -4,6 +4,11 @@ class GamesController < ApplicationController
   before_action :set_game, only: [:show]
   load_and_authorize_resource
 
+  def index
+    @user_active_games = current_user.inscriptions.includes(:game).where(status: [:active, :bench]).order("games.game_date ASC")
+    @user_past_games = current_user.inscriptions.includes(:game).where(status: :inactive).order("games.game_date ASC")
+  end
+
   def show
     @active_inscriptions = Inscription.active(@game.id)
     @bench_inscriptions = Inscription.bench(@game.id)
